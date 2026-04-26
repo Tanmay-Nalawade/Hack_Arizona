@@ -29,29 +29,27 @@
         <a class="btn btn--ghost" href="/coursework">View coursework</a>
       </div>
 
-      <div class="duoMap" role="group" aria-label="Quest path">
+      <div class="duoMap duoMap--h" role="group" aria-label="Quest path">
         <div class="duoMap__bg" aria-hidden="true"></div>
 
-        <svg class="duoMap__path" viewBox="0 0 420 980" aria-hidden="true">
+        <svg class="duoMap__path duoMap__path--h" viewBox="0 0 1400 280" aria-hidden="true">
           <path
-            d="M210 40
-               C 330 80, 330 190, 210 230
-               C 90 270, 90 380, 210 420
-               C 330 460, 330 570, 210 610
-               C 90 650, 90 760, 210 800
-               C 330 840, 330 930, 210 960"
+            d="M70 140
+               C 200 30, 340 30, 470 140
+               C 600 250, 740 250, 870 140
+               C 1000 30, 1140 30, 1270 140
+               C 1350 210, 1390 210, 1370 140"
             fill="none"
             stroke="rgba(214, 162, 31, 0.65)"
             stroke-width="18"
             stroke-linecap="round"
           />
           <path
-            d="M210 40
-               C 330 80, 330 190, 210 230
-               C 90 270, 90 380, 210 420
-               C 330 460, 330 570, 210 610
-               C 90 650, 90 760, 210 800
-               C 330 840, 330 930, 210 960"
+            d="M70 140
+               C 200 30, 340 30, 470 140
+               C 600 250, 740 250, 870 140
+               C 1000 30, 1140 30, 1270 140
+               C 1350 210, 1390 210, 1370 140"
             fill="none"
             stroke="rgba(255, 255, 255, 0.72)"
             stroke-width="8"
@@ -59,43 +57,68 @@
           />
         </svg>
 
-        <ol class="duoNodes" aria-label="Lessons">
-          <li class="duoNode duoNode--done" style="--x: 210px; --y: 70px" data-title="Basics 1" data-desc="Greetings, common phrases, quick wins.">
+        <ol class="duoNodes duoNodes--h" aria-label="Lessons">
+          <li class="duoNode duoNode--done" style="--x: 90px; --y: 140px" data-title="Basics 1" data-desc="Greetings, common phrases, quick wins.">
             <button class="duoNode__btn" type="button" aria-label="Basics 1">
               <span class="duoNode__icon" aria-hidden="true">✅</span>
             </button>
           </li>
 
-          <li class="duoNode duoNode--done" style="--x: 290px; --y: 210px" data-title="Basics 2" data-desc="Listening + matching exercises.">
+          <li class="duoNode duoNode--done" style="--x: 250px; --y: 85px" data-title="Basics 2" data-desc="Listening + matching exercises.">
             <button class="duoNode__btn" type="button" aria-label="Basics 2">
               <span class="duoNode__icon" aria-hidden="true">✅</span>
             </button>
           </li>
 
-          <li class="duoNode duoNode--current" style="--x: 170px; --y: 360px" data-title="Food Bank Tour" data-desc="Key terms you’ll see across the Food Bank experience.">
+          <li class="duoNode duoNode--current" style="--x: 460px; --y: 140px" data-title="Food Bank Tour" data-desc="Key terms you’ll see across the Food Bank experience.">
             <button class="duoNode__btn" type="button" aria-label="Food Bank Tour">
               <span class="duoNode__icon" aria-hidden="true">⭐</span>
               <span class="duoNode__pulse" aria-hidden="true"></span>
             </button>
           </li>
 
-          <li class="duoNode duoNode--locked" style="--x: 290px; --y: 520px" data-title="Community Helpers" data-desc="Unlock after finishing today’s quest.">
+          <li class="duoNode duoNode--locked" style="--x: 600px; --y: 205px" data-title="Check-in Desk" data-desc="Learn what to bring and what to expect at check-in.">
+            <button class="duoNode__btn" type="button" aria-label="Check-in Desk" disabled>
+              <span class="duoNode__icon" aria-hidden="true">🔒</span>
+            </button>
+          </li>
+
+          <li class="duoNode duoNode--locked" style="--x: 760px; --y: 205px" data-title="Community Helpers" data-desc="Unlock after finishing today’s quest.">
             <button class="duoNode__btn" type="button" aria-label="Community Helpers" disabled>
               <span class="duoNode__icon" aria-hidden="true">🔒</span>
             </button>
           </li>
 
-          <li class="duoNode duoNode--locked" style="--x: 170px; --y: 690px" data-title="Serving Day" data-desc="A longer quest with mixed practice.">
+          <li class="duoNode duoNode--locked" style="--x: 900px; --y: 140px" data-title="Food Categories" data-desc="Practice names for staples, produce, and pantry items.">
+            <button class="duoNode__btn" type="button" aria-label="Food Categories" disabled>
+              <span class="duoNode__icon" aria-hidden="true">🔒</span>
+            </button>
+          </li>
+
+          <li class="duoNode duoNode--locked" style="--x: 1040px; --y: 85px" data-title="Serving Day" data-desc="A longer quest with mixed practice.">
             <button class="duoNode__btn" type="button" aria-label="Serving Day" disabled>
               <span class="duoNode__icon" aria-hidden="true">🔒</span>
             </button>
           </li>
 
-          <li class="duoNode duoNode--locked" style="--x: 230px; --y: 870px" data-title="Next Unit" data-desc="Keep going to unlock the next unit.">
+          <li class="duoNode duoNode--locked" style="--x: 1180px; --y: 140px" data-title="Directions" data-desc="Follow and give simple directions inside the facility.">
+            <button class="duoNode__btn" type="button" aria-label="Directions" disabled>
+              <span class="duoNode__icon" aria-hidden="true">🔒</span>
+            </button>
+          </li>
+
+          <li class="duoNode duoNode--locked" style="--x: 1300px; --y: 200px" data-title="Wrap-up" data-desc="Review what you learned and prep for the next unit.">
+            <button class="duoNode__btn" type="button" aria-label="Wrap-up" disabled>
+              <span class="duoNode__icon" aria-hidden="true">🔒</span>
+            </button>
+          </li>
+
+          <li class="duoNode duoNode--locked" style="--x: 1370px; --y: 140px" data-title="Next Unit" data-desc="Keep going to unlock the next unit.">
             <button class="duoNode__btn" type="button" aria-label="Next Unit" disabled>
               <span class="duoNode__icon" aria-hidden="true">🏁</span>
             </button>
           </li>
+
         </ol>
       </div>
     </section>
@@ -104,8 +127,8 @@
       <div class="panel__header">
         <h2 class="panel__title">Quest</h2>
         <span class="pill" style="box-shadow:none;background:transparent">
-          <span class="pill__label">Progress</span>
-          <span class="pill__value">2 / 5</span>
+          <span class="pill__label">Quests</span>
+          <span class="pill__value" id="questProgress">0 / 10</span>
         </span>
       </div>
       <div class="panel__body">
@@ -123,6 +146,36 @@
         </div>
       </div>
     </aside>
+  </div>
+</section>
+
+<section class="chatDock" data-chat aria-label="Chat assistant">
+  <div class="chatCard">
+    <div class="chatHeader">
+      <div class="chatTitle">
+        <span aria-hidden="true">🤖</span>
+        Assistant
+        <span class="chatBadge">AI</span>
+      </div>
+      <button class="chatToggle" type="button" data-chat-toggle aria-expanded="true">
+        Hide
+      </button>
+    </div>
+
+    <div data-chat-panel>
+      <div class="chatBody" data-chat-body></div>
+
+      <form class="chatFooter" data-chat-form>
+        <input
+          class="chatInput"
+          data-chat-input
+          type="text"
+          placeholder="Ask about quests, coursework, streaks..."
+          autocomplete="off"
+        />
+        <button class="chatSend" data-chat-send type="submit">Send</button>
+      </form>
+    </div>
   </div>
 </section>
 
@@ -151,6 +204,14 @@
     btn.addEventListener("click", () => selectNode(node));
   });
 
+  // Progress indicator: done quests out of total
+  const progressEl = document.getElementById("questProgress");
+  if (progressEl) {
+    const total = nodes.length;
+    const done = nodes.filter((n) => n.classList.contains("duoNode--done")).length;
+    progressEl.textContent = `${done} / ${total}`;
+  }
+
   const random = document.getElementById("randomQuest");
   if (random) {
     random.addEventListener("click", () => {
@@ -160,4 +221,6 @@
     });
   }
 </script>
+
+<script src="/chat.js"></script>
 

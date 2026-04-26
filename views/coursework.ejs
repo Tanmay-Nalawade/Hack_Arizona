@@ -1,35 +1,72 @@
 <% layout("layout") %>
 
-<section class="home" style="max-width: 980px">
-  <header class="home__header" style="margin-bottom: 10px">
-    <div>
-      <h1 class="home__title">Coursework</h1>
-      <p class="home__subtitle">Pick a course and continue where you left off.</p>
+<section class="cw">
+  <% if (!coursework) { %>
+    <p style="margin:0;color:var(--muted)">No coursework found. Run <code>npm run seed</code>.</p>
+  <% } else { %>
+    <div class="cw__hero">
+      <h1 class="cw__title"><%= coursework.title %></h1>
+      <p class="cw__desc"><%= coursework.description %></p>
+      <div class="cw__meta">
+        Chapters: <%= coursework.units?.length || 0 %> · Level: <%= coursework.level %>
+      </div>
     </div>
-  </header>
 
-  <div class="panel">
-    <div class="panel__header">
-      <h2 class="panel__title">Available</h2>
-    </div>
-    <div class="panel__body">
-      <% if (!coursework) { %>
-        <p style="margin:0;color:var(--muted)">No coursework found. Run <code>npm run seed</code>.</p>
-      <% } else { %>
-        <div style="padding:14px;border:1px solid rgba(107,42,90,0.14);border-radius:16px;background:rgba(255,255,255,0.85)">
-          <div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
-            <div>
-              <div style="font-weight:950;color:var(--text)"><%= coursework.title %></div>
-              <div style="color:var(--muted);margin-top:4px"><%= coursework.description %></div>
-              <div style="color:var(--muted);margin-top:8px;font-size:13px">
-                Units: <%= coursework.units?.length || 0 %> · Level: <%= coursework.level %>
-              </div>
-            </div>
-            <a class="btn btn--primary" href="/">Continue</a>
+    <div class="chapters" aria-label="Chapters">
+      <% 
+        const units = (coursework.units || []).slice().sort((a,b) => (a.order||0) - (b.order||0));
+        const total = Math.max(10, units.length);
+        const activeSlug = (currentUser?.courseworkProgress || []).find(p => String(p.coursework) === String(coursework._id))?.activeUnitSlug || "";
+        const completed = new Set((currentUser?.courseworkProgress || []).find(p => String(p.coursework) === String(coursework._id))?.completedLessonSlugs || []);
+      %>
+
+      <% for (let i = 0; i < total; i++) { 
+        const u = units[i];
+        const chapterNum = i + 1;
+        const slug = u?.slug || `chapter-${chapterNum}`;
+        const isCurrent = activeSlug && slug === activeSlug;
+        const lessonCount = u?.lessons?.length || 0;
+        // crude "done" heuristic: if all lesson slugs exist in completed set
+        const allLessonSlugs = (u?.lessons || []).map(l => l.slug);
+        const completedCount = allLessonSlugs.filter(s => completed.has(s)).length;
+        const isDone = allLessonSlugs.length > 0 && allLessonSlugs.every(s => completed.has(s));
+        const isInProgress = !isDone && completedCount > 0;
+        const isLocked = !u; // placeholder chapters 2..10 locked until seeded
+        const cls = isDone
+          ? "chapter chapter--done"
+          : isCurrent
+            ? "chapter chapter--current"
+            : isInProgress
+              ? "chapter chapter--progress"
+              : isLocked
+                ? "chapter chapter--locked"
+                : "chapter";
+        const status = isDone
+          ? "Done"
+          : isCurrent
+            ? "Current"
+            : isInProgress
+              ? "In progress"
+              : isLocked
+                ? "Locked"
+                : "Available";
+      %>
+        <article class="<%= cls %>">
+          <div class="chapter__top">
+            <div class="chapter__pill">Chapter <%= chapterNum %></div>
+            <div class="chapter__status"><%= status %></div>
           </div>
-        </div>
+          <h2 class="chapter__name"><%= u?.title || `Chapter ${chapterNum}` %></h2>
+          <p class="chapter__sub">
+            <%= u?.description || (isLocked ? "Unlock by completing previous chapters." : "Continue learning.") %>
+          </p>
+          <div class="chapter__actions">
+            <span style="color:var(--muted);font-size:13px">Lessons: <%= completedCount %> / <%= lessonCount %></span>
+            <a class="btn btn--primary" href="/" aria-disabled="<%= isLocked ? 'true' : 'false' %>"><%= isLocked ? "Locked" : (isCurrent ? "Continue" : "Start") %></a>
+          </div>
+        </article>
       <% } %>
     </div>
-  </div>
+  <% } %>
 </section>
 

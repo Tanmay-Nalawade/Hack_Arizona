@@ -6,6 +6,7 @@ const session = require("express-session");
 const bcrypt = require("bcryptjs");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
+const OpenAI = require("openai");
 
 const User = require("./models/User");
 const Coursework = require("./models/Coursework");
@@ -19,6 +20,7 @@ app.engine("ejs", ejsMate);
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 
@@ -73,7 +75,7 @@ app.use(express.static(path.join(__dirname, "public"), { index: false }));
 app.get("/", (req, res) => {
   res.render("index", {
     title: "Home",
-    styles: ["/home.css"],
+    styles: ["/home.css", "/chat.css"],
     bodyClass: "page--full",
     mainClass: "page page--full",
   });
@@ -140,13 +142,57 @@ app.post("/sign-out", (req, res) => {
   });
 });
 
+app.post("/api/chat", requireAuth, async (req, res) => {
+  const message = String(req.body?.message || "").trim();
+  if (!message) return res.status(400).json({ error: "Missing message" });
+
+  const apiKey = process.env.OPENAI_API_KEY;
+  if (!apiKey) {
+    return res.status(501).json({
+      error:
+        "AI is not configured. Set OPENAI_API_KEY in your environment, then restart the server.",
+    });
+  }
+
+  try {
+    const client = new OpenAI({ apiKey });
+    const completion = await client.chat.completions.create({
+      model: process.env.OPENAI_MODEL || "gpt-4o-mini",
+      messages: [
+        {
+          role: "system",
+          content:
+            "You are a helpful assistant for a Duolingo-style quest app. Keep responses concise and actionable.",
+        },
+        {
+          role: "user",
+          content: message,
+        },
+      ],
+    });
+
+    const reply =
+      completion.choices?.[0]?.message?.content?.trim() ||
+      "I couldn't generate a response.";
+    return res.json({ reply });
+  } catch (err) {
+    return res.status(500).json({ error: "AI request failed" });
+  }
+});
+
 // Protected routes (examples)
 app.get("/coursework", requireAuth, async (req, res, next) => {
   try {
     const coursework = await Coursework.findOne({ isPublished: true })
       .sort({ level: 1, createdAt: -1 })
       .lean();
-    res.render("coursework", { title: "Coursework", coursework });
+    res.render("coursework", {
+      title: "Coursework",
+      coursework,
+      styles: ["/coursework.css"],
+      bodyClass: "page--full",
+      mainClass: "page page--full",
+    });
   } catch (err) {
     next(err);
   }

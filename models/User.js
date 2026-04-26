@@ -13,7 +13,6 @@ const userSchema = new Schema(
     email: {
       type: String,
       required: true,
-      unique: true,
       lowercase: true,
       trim: true,
       maxlength: 254,
@@ -21,6 +20,13 @@ const userSchema = new Schema(
     passwordHash: {
       type: String,
       required: true,
+    },
+
+    role: {
+      type: String,
+      enum: ["user", "admin"],
+      default: "user",
+      index: true,
     },
 
     // Duolingo-like game state

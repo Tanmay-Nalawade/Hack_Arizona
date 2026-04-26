@@ -2,6 +2,13 @@ const express = require("express");
 const path = require("path");
 const ejsMate = require("ejs-mate");
 const methodOverride = require("method-override");
+const session = require("express-session");
+const bcrypt = require("bcryptjs");
+const passport = require("passport");
+const LocalStrategy = require("passport-local");
+
+const User = require("./models/User");
+const { attachCurrentUser, requireAuth, requireRole } = require("./middleware/auth");
 
 const app = express();
 
@@ -13,6 +20,52 @@ app.set("views", path.join(__dirname, "views"));
 
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
+
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET || "dev_secret_change_me",
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      httpOnly: true,
+      sameSite: "lax",
+      maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
+    },
+  })
+);
+
+passport.use(
+  new LocalStrategy(
+    { usernameField: "email", passwordField: "password" },
+    async (email, password, done) => {
+      try {
+        const user = await User.findOne({ email: String(email).toLowerCase().trim() });
+        if (!user) return done(null, false, { message: "Invalid email or password" });
+
+        const ok = await bcrypt.compare(String(password), user.passwordHash);
+        if (!ok) return done(null, false, { message: "Invalid email or password" });
+
+        return done(null, user);
+      } catch (err) {
+        return done(err);
+      }
+    }
+  )
+);
+
+passport.serializeUser((user, done) => done(null, user._id.toString()));
+passport.deserializeUser(async (id, done) => {
+  try {
+    const user = await User.findById(id);
+    return done(null, user || false);
+  } catch (err) {
+    return done(err);
+  }
+});
+
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(attachCurrentUser);
 
 app.use(express.static(path.join(__dirname, "public"), { index: false }));
 
@@ -32,6 +85,37 @@ app.get("/sign-in", (req, res) => {
     bodyClass: "page--full",
     mainClass: "page page--full",
   });
+});
+
+app.post("/sign-in", async (req, res, next) => {
+  passport.authenticate("local", {
+    successRedirect: "/",
+    failureRedirect: "/sign-in",
+  })(req, res, next);
+});
+
+app.post("/sign-out", (req, res) => {
+  req.logout(() => {
+    res.redirect("/sign-in");
+  });
+});
+
+// Protected routes (examples)
+app.get("/coursework", requireAuth, (req, res) => {
+  res.send("Coursework (protected)");
+});
+
+app.get("/profile", requireAuth, (req, res) => {
+  res.send(`Profile (protected) - ${res.locals.currentUser?.email || ""}`);
+});
+
+app.get("/streaks", requireAuth, (req, res) => {
+  res.send("Streaks (protected)");
+});
+
+// Admin-only example
+app.get("/admin", requireAuth, requireRole("admin"), (req, res) => {
+  res.send("Admin only");
 });
 
 const port = Number.parseInt(process.env.PORT || "8080", 10);

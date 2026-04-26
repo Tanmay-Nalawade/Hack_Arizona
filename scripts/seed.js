@@ -2,16 +2,18 @@
 require("../db");
 
 const mongoose = require("mongoose");
+const bcrypt = require("bcryptjs");
 const User = require("../models/User");
 
 async function seed() {
   const now = new Date();
+  const passwordHash = await bcrypt.hash("password123", 10);
 
   const users = [
     {
       username: "demo",
       email: "demo@hackarizona.local",
-      passwordHash: "demo_password_hash",
+      passwordHash,
       streakCount: 7,
       lastStreakDate: now,
       xp: 420,
@@ -28,7 +30,7 @@ async function seed() {
     {
       username: "tanmay",
       email: "tanmay@hackarizona.local",
-      passwordHash: "tanmay_password_hash",
+      passwordHash,
       streakCount: 2,
       lastStreakDate: now,
       xp: 120,
@@ -43,7 +45,7 @@ async function seed() {
     {
       username: "alex",
       email: "alex@hackarizona.local",
-      passwordHash: "alex_password_hash",
+      passwordHash,
       streakCount: 0,
       xp: 0,
       level: 1,

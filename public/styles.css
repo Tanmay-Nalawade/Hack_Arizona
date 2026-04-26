@@ -69,6 +69,14 @@ body {
   gap: 10px;
 }
 
+.nav__right form {
+  margin: 0;
+}
+
+.nav__right button.nav__item {
+  font: inherit;
+}
+
 .nav__item {
   display: inline-flex;
   align-items: center;

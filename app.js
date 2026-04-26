@@ -87,11 +87,50 @@ app.get("/sign-in", (req, res) => {
   });
 });
 
+app.get("/sign-up", (req, res) => {
+  res.render("sign-up", {
+    title: "Sign up",
+    styles: ["/sign-in.css"],
+    bodyClass: "page--full",
+    mainClass: "page page--full",
+  });
+});
+
 app.post("/sign-in", async (req, res, next) => {
   passport.authenticate("local", {
     successRedirect: "/",
     failureRedirect: "/sign-in",
   })(req, res, next);
+});
+
+app.post("/sign-up", async (req, res, next) => {
+  try {
+    const { username, email, password } = req.body || {};
+    if (!email || !password) return res.status(400).send("Missing credentials");
+
+    const normalizedEmail = String(email).toLowerCase().trim();
+    const existing = await User.findOne({ email: normalizedEmail }).select("_id");
+    if (existing) return res.status(409).send("Email already in use");
+
+    const passwordHash = await bcrypt.hash(String(password), 10);
+    const user = await User.create({
+      username: username ? String(username).trim() : undefined,
+      email: normalizedEmail,
+      passwordHash,
+      role: "user",
+      streakCount: 0,
+      xp: 0,
+      level: 1,
+      progress: {},
+    });
+
+    req.login(user, (err) => {
+      if (err) return next(err);
+      return res.redirect("/");
+    });
+  } catch (err) {
+    return next(err);
+  }
 });
 
 app.post("/sign-out", (req, res) => {

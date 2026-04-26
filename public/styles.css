@@ -77,6 +77,78 @@ body {
   font: inherit;
 }
 
+.navMenu {
+  position: relative;
+}
+
+.navMenu__trigger {
+  padding: 8px;
+}
+
+.navMenu__dropdown {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 10px);
+  width: 260px;
+  border-radius: 16px;
+  border: 1px solid rgba(107, 42, 90, 0.18);
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 18px 40px rgba(55, 24, 44, 0.18);
+  padding: 10px;
+  z-index: 80;
+}
+
+.navMenu__meta {
+  padding: 10px 10px 8px;
+  border-bottom: 1px solid rgba(107, 42, 90, 0.12);
+  margin-bottom: 6px;
+}
+
+.navMenu__name {
+  font-weight: 950;
+  color: var(--text);
+  line-height: 1.1;
+}
+
+.navMenu__email {
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.2;
+  word-break: break-word;
+}
+
+.navMenu__item {
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 10px;
+  border-radius: 12px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--link);
+  text-decoration: none;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 850;
+}
+
+.navMenu__item:hover {
+  background: var(--panel);
+  border-color: var(--ring);
+}
+
+.navMenu__item--danger {
+  color: rgba(140, 18, 18, 0.92);
+}
+
+.navMenu__item--danger:hover {
+  background: rgba(140, 18, 18, 0.08);
+  border-color: rgba(140, 18, 18, 0.18);
+}
+
 .nav__item {
   display: inline-flex;
   align-items: center;
